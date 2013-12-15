@@ -460,11 +460,7 @@
 	}
 	
 	function post($url, $postdata = null, $authenticate = null) {
-		global $identicapass;
 		$ch = curl_init();
-		if( $authenticate == 'identica' ){
-			curl_setopt($ch, CURLOPT_USERPWD, 'wikisignpost' . ":" . $identicapass);
-		}
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		if( $postdata !== null ){

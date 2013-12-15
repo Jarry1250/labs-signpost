@@ -65,9 +65,6 @@
 		$nextstep = $step;
 		$step = 0;
 	} else {
-		if( $step == 5 && !isset( $_POST['twitter'] ) ){
-			$step = 4;
-		}
 		$nextstep = $step + 1;
 	}
 	
@@ -76,7 +73,6 @@
 		<form action='publish.php' method='POST'>
 		<input type='hidden' name='step' id='step' value='$nextstep' />
 		<input type='hidden' name='debug' id='debug' value='" . ( is_debug() ? "true" : "" ) . "' /> ";
-		if( isset( $_POST['twitter'] ) ) echo "<input type='hidden' name='twitter' id='twitter' value='" .$_POST['twitter'] . "' />";
 		echo "\nPassword: <input type='password' name='confirm' id='confirm' />
 		<input type='submit' /></form>.";
 	}
@@ -171,7 +167,7 @@
 		do_edit( "Wikipedia:Wikipedia_Signpost", $mainpagetext, "(on behalf of $editor) bot creating basic main page ready for manual editing" );
 		echo "<form action='publish.php' method='POST'>
 		<input type='hidden' name='step' id='step' value='$nextstep' />		
-		<input type='submit' value='Continue to step #$nextstep of 5' /></form>.";
+		<input type='submit' value='Continue to step #$nextstep of 4' /></form>.";
 	}
 	if( $step == 2 ){
 		// Step 1b: main page
@@ -208,7 +204,7 @@
 		
 		echo "<form action='publish.php' method='POST'>
 		<input type='hidden' name='step' id='step' value='$nextstep' />		
-		<input type='submit' value='Continue to step #$nextstep of 5' /></form>.";
+		<input type='submit' value='Continue to step #$nextstep of 4' /></form>.";
 	}
 	if( $step == 3 ){
 		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
@@ -232,22 +228,9 @@
 		
 		echo "<form action='publish.php' method='POST'>
 		<input type='hidden' name='step' id='step' value='$nextstep' />		
-		<input type='submit' value='Continue to step #$nextstep of 5' /></form>.";
+		<input type='submit' value='Continue to step #$nextstep of 4' /></form>.";
 	}
 	if( $step == 4 ){
-		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
-		
-		$text = post( 'http://ur1.ca/', 'longurl=' . urlencode( 'http://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost/Archives/' . $thisissue ) );
-		preg_match( '/Your ur1 is: [<]a href[=]"([^"]+)"/', $text, $matches );
-		$url = $matches[1];
-		echo "<form action='publish.php' method='POST'>
-		<input type='hidden' name='step' id='step' value='$nextstep' />		
-		<input type='hidden' name='debug' id='debug' value='" . ( is_debug() ? "true" : "" ) . "' /> 
-		Now write a Identi.ca/Twitter post (limited to 140 characters, URL will appear shortened): <input type='text' name='twitter' maxlength='147' id='twitter' style='width:300px' value='New #Wikipedia Signpost: $url DESCRIPTION and more' /><br />
-		<input type='submit' value='Continue to step #$nextstep of 5' /></form>.";
-	}
-	
-	if( $step == 5 ){
 		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
 
 		//Step 8: local delivery
@@ -265,33 +248,10 @@
 		do_edit( 'User:EdwardsBot/Status', "Start", "(on behalf of $editor) bot initiating Signpost delivery for issue dated " . $dmy );
 
 		//Step 9: identi.ca
-		$text = $_POST['twitter'];
-		if( is_confirmed() && !is_debug() ){
-			post( 'http://identi.ca/api/statuses/update.json', 'status=' . urlencode( $text ), 'identica' );
-		} else{
-			echo "<strong>Would have dented/tweeted:</strong><br />$text<br /><br />";
-		}
+		//[deprecated]
 
 		//Step 10: blog
-		$blogtitle = urlencode( "Wikipedia Signpost – Volume $volumenumber, Issue $issuenumber – $dmy" );
-		$blogtext = file_get_contents( "http://en.wikipedia.org/w/api.php?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|6}}" );
-		$blogtext = json_decode( $blogtext, true );
-		$blogtext = str_replace( '&lt;br /&gt;', '', $blogtext['expandtemplates']['*'] );
-		$blogtext .= '<br/><a href="http://en.wikipedia.org/wiki/Wikipedia:Signpost/Single" title="Wikipedia:Wikipedia_Signpost/Single">Single page view</a><br/><a href="http://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/' . 
-		$thisissue. '" title="Book:Wikipedia Signpost/' . $thisissue .'">PDF version</a>';
-		$blogtext = urlencode( $blogtext );
-		
-		if( is_confirmed() && !is_debug() ){
-			post( 'http://www.wikipediasignpost.com/blog/wp-login.php', 'log=admin&pwd='.$blogpass );
-			$json = file_get_contents( 'http://www.wikipediasignpost.com/blog/?json=get_nonce&controller=posts&method=create_post' );
-			$json = json_decode( $json, true );
-			$nonce = $json['nonce'];
-			file_get_contents( "http://www.wikipediasignpost.com/blog/?json=create_post&controller=posts&nonce=$nonce&status=publish&title=$blogtitle&content=$blogtext" );
-			echo "Blogged.<br />";
-		} else{
-			echo "<strong>Would have blogged:</strong><br />$blogtext<br /><br />";
-		}
-		
+		//[deprecated]
 	
 		//Step 11: global subscribers
 		$meta = Peachy::newWiki('livingbotmeta');

@@ -53,7 +53,8 @@
 	$editor = "[[User:The_ed17|]]";
 	ini_set( 'user_agent', 'Signpost delivery system' );
 	
-	list( $emailpass, $identicapass, $blogpass ) = explode( ';', file_get_contents( '/home/jarry/signpost.txt' ) );
+	list( $emailpass, $identicapass, $blogpass )
+		= explode( ';', file_get_contents( '/data/project/signpost/credentials.txt' ) );
 	
 	if( !isset( $_GET['step'] ) && !isset( $_POST['step'] ) ){ 
 		$step = 1;

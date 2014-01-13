@@ -320,7 +320,7 @@
 		do_edit( "Wikipedia:Wikipedia Signpost/Archives/$nextissue", "{{Signpost archive|$thisissue|$nextissue|$fortnightissue}}", "(on behalf of $editor) bot creating archives of new edition of ''[[WP:SIGNPOST|The Signpost]]''" );
 
 		//Step 16: tell Yuvi's app there's a new issue
-		post( 'http://signpost.yuvi.in/issue/update/latest', "" );
+		post( 'tools-webproxy.pmtpa.wmflabs/wp-signpost/issue/update/latest', "" );
 		
 		//Step 17: permanent Single pages
 		$newtext = "{{Wikipedia:Wikipedia Signpost/Single|issuedate=$thisissue}}";

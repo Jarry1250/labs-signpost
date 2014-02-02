@@ -131,7 +131,7 @@
 	if( $step == 1 ){
 		//Step 1a: main page		
 		$mainpagetext = "<noinclude>{{pp-semi-indef}}{{pp-move-indef}}</noinclude>
-{{Wikipedia:Signpost/Template:Signpost-header|{{Str left|{{Wikipedia:Wikipedia Signpost/Issue|2}}|8}}|{{date|{{Wikipedia:Wikipedia Signpost/Issue|1}}|dmy}}|{{Str right|{{Wikipedia:Wikipedia Signpost/Issue|2}}|10}}}}
+{{Wikipedia:Signpost/Template:Signpost-header|{{Str left|{{Wikipedia:Wikipedia Signpost/Issue|2}}|9}}|{{date|{{Wikipedia:Wikipedia Signpost/Issue|1}}|dmy}}|{{Str right|{{Wikipedia:Wikipedia Signpost/Issue|2}}|10}}}}
 <div><!-- Main area -->
 <div style=\"width:33%; float:left; margin:15px 0px;\"><div style=\"margin-left:3em; margin-right:1.5em;\" class=\"plainlinks\">\n";
 		$mainpagetext .= $leftcol;

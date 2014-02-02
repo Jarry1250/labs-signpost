@@ -236,47 +236,46 @@
 		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
 
 		//Step 8: local delivery
-		$page = $wiki->initPage( 'User:EdwardsBot/Spam' );
-		$oldtext = $page->get_text();
-		preg_match( '/# KEY[^0-9]*([0-9]{3,})[^0-9]+#/', $oldtext, $matches );
-		$oldid = intval( $matches[1] );
-		$newid = $oldid + 1;
-		if( $newid < 1000 ) $newid = "0$newid";
-		$newtext = "{{../Instructions}}\n<source lang=\"text\" enclose=\"div\">\n# KEY\n\n$newid\n\n# RECIPIENTS (PAGE LIST)\n\nWikipedia:Wikipedia Signpost/Tools/Spamlist\n\n";
-		$newtext .= "# SUBJECT\n\n''The Signpost'': " . $dmy . "\n\n# BODY\n\n";
-		$newtext .= "<div style=\"-moz-column-count:2; -webkit-column-count:2; column-count:2;\">\n{{Wikipedia:Wikipedia Signpost/{{subst:#time:Y-m-d|-{{subst:#time:N}} days +1 days}}}}\n</div><!--Volume $volumenumber, Issue $issuenumber-->\n";
-		$newtext .= "<div class=\"hlist\" style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">\n* '''[[Wikipedia:Wikipedia Signpost|Read this Signpost in full]]'''\n* [[Wikipedia:Signpost/Single|Single-page]]\n* [[Wikipedia:Wikipedia Signpost/Subscribe|Unsubscribe]]\n* ~~~~\n</div>\n\n</source>";
-		do_edit( 'User:EdwardsBot/Spam', $newtext, "(on behalf of $editor) bot initiating Signpost delivery for issue dated " . $dmy );
-		do_edit( 'User:EdwardsBot/Status', "Start", "(on behalf of $editor) bot initiating Signpost delivery for issue dated " . $dmy );
+		$message = "<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\"><div style=\"-moz-column-count:2; -webkit-column-count:2; column-count:2;\">\n{{Wikipedia:Wikipedia Signpost/{{subst:#time:Y-m-d|-{{subst:#time:N}} days +1 days}}}}\n</div><!--Volume $volumenumber, Issue $issuenumber-->\n";
+		$message .= "<div class=\"hlist\" style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">\n* '''[[Wikipedia:Wikipedia Signpost|Read this Signpost in full]]'''\n* [[Wikipedia:Signpost/Single|Single-page]]\n* [[Wikipedia:Wikipedia Signpost/Subscribe|Unsubscribe]]\n* ~~~~\n</div></div>";
+		$tokens = $wiki->get_tokens();
+		HTTP::post( $wiki->get_base_url(),
+			array(
+				'action' => 'massmessage',
+				'spamlist' => 'Wikipedia:Wikipedia Signpost/Tools/Spamlist',
+				'subject' => "''The Signpost'': " . $dmy,
+				'token' => $tokens['edit']
+			)
+		);
 
 		//Step 9: identi.ca
 		//[deprecated]
 
 		//Step 10: blog
 		//[deprecated]
-	
+
 		//Step 11: global subscribers
-		$meta = Peachy::newWiki('livingbotmeta');
-		$page = $meta->initPage( 'Global message delivery/Spam' );
-		$oldtext = $page->get_text();
-		preg_match( '/# KEY[^0-9]*([0-9]{3,})[^0-9]+#/', $oldtext, $matches );
-		$oldid = intval( $matches[1] );
-		$newid = $oldid + 1;
-		if( $newid < 1000 ) $newid = "0$newid";
-		
-		$newtext = "{{:Global message delivery/Instructions}}\n<source lang=\"text\" enclose=\"div\">\n# KEY\n\n" . $newid . "\n\n";
-		$newtext .= "# RECIPIENTS (PAGE LIST)\n\nGlobal message delivery/Targets/Signpost\n\n# SUBJECT\n\n''The Signpost'': $dmy\n\n# BODY\n\n";
-		$newtext .= '<div style="margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;">';
+		$meta = Peachy::newWiki( 'livingbotmeta' );
+		$tokens = $meta->get_tokens();
+
+		$newtext = '<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\">';
+		$newtest .= '<div style="margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;">';
 		$newtext .= "''News, reports and features from the English Wikipedia's weekly journal about Wikipedia and Wikimedia''</div>\n";
 		$newtext .= '<div style="-moz-column-count:2; -webkit-column-count:2; column-count:2;">' . "\n";
-		$newbodytext = file_get_contents( "http://en.wikipedia.org/w/api.php?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|8}}" );
+		$newbodytext = HTTP::get( $wiki->get_base_url() . "?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|8}}" );
 		$newbodytext = json_decode( $newbodytext, true );
 		$newbodytext = str_replace( array('<nowiki>', '</nowiki>'), '', $newbodytext['expandtemplates']['*'] );
 		$newbodytext = str_replace( '<br /><br />', "", $newbodytext );
 		$newtext .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>\n\n</source>";
-		do_edit( 'Global message delivery/Spam', $newtext, "(on behalf of $editor) bot initiating Signpost delivery for issue dated " . $dmy, true );
-		do_edit( 'Global message delivery/Status', "Start", "(on behalf of $editor) bot initiating Signpost delivery for issue dated " . $dmy, true );
-		
+		HTTP::post( $meta->get_base_url(),
+			array(
+				'action' => 'massmessage',
+				'spamlist' => 'Global message delivery/Targets/Signpost',
+				'subject' => "''The Signpost'': " . $dmy,
+				'token' => $tokens['edit']
+			)
+		);
+
 		//Step 12: article alerts
 		$page = $wiki->initPage( 'Wikipedia:Article_alerts/News' );
 		$text = $page->get_text();

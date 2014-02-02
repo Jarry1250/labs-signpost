@@ -52,23 +52,23 @@
 	$dmy = date( 'd F Y', $publicationdatestamp );
 	$editor = "[[User:The_ed17|]]";
 	ini_set( 'user_agent', 'Signpost delivery system' );
-	
+
 	list( $emailpass, $identicapass, $blogpass )
 		= explode( ';', file_get_contents( '/data/project/signpost/credentials.txt' ) );
-	
-	if( !isset( $_GET['step'] ) && !isset( $_POST['step'] ) ){ 
+
+	if( !isset( $_GET['step'] ) && !isset( $_POST['step'] ) ){
 		$step = 1;
 	} else {
 		$step = isset( $_POST['step'] ) ? intval( $_POST['step'] ) : intval( $_GET['step'] );
 	}
-	
+
 	if( !is_confirmed() && !is_debug() ){
 		$nextstep = $step;
 		$step = 0;
 	} else {
 		$nextstep = $step + 1;
 	}
-	
+
 	if( $step == 0 ){
 		echo "<p>Welcome. To continue, you need to supply a password below or enter 'dry run' mode by appending ?debug=true to the present URL. By pressing the button below you confirm that you wish to start the step named (for example, starting step one is responsible for officially 'publishing' <i>The Signpost</i>).</p>
 		<form action='publish.php' method='POST'>
@@ -87,6 +87,7 @@
 		preg_match_all( '/\{\{[^}]+\{\{\{1\}\}\}[^}]+\}\}/', $text, $items );
 		$items = $items[0];
 		$stories = array();
+		$count = 0;
 		foreach( $items as $item ){
 			$item = substr( $item, 2, -2 );
 			$bits = explode( '|', $item );
@@ -129,13 +130,13 @@
 		}
 	}
 	if( $step == 1 ){
-		//Step 1a: main page		
+		//Step 1a: main page
 		$mainpagetext = "<noinclude>{{pp-semi-indef}}{{pp-move-indef}}</noinclude>
 {{Wikipedia:Signpost/Template:Signpost-header|{{Str left|{{Wikipedia:Wikipedia Signpost/Issue|2}}|9}}|{{date|{{Wikipedia:Wikipedia Signpost/Issue|1}}|dmy}}|{{Str right|{{Wikipedia:Wikipedia Signpost/Issue|2}}|10}}}}
 <div><!-- Main area -->
 <div style=\"width:33%; float:left; margin:15px 0px;\"><div style=\"margin-left:3em; margin-right:1.5em;\" class=\"plainlinks\">\n";
 		$mainpagetext .= $leftcol;
-		$mainpagetext .= "</div><div style=\"width:33%; float:left; margin:15px 0px;\"><div style=\"margin-left:3em; margin-right:1.5em;\" class=\"plainlinks\"><!-- No time to code the bot so it puts something useful here for you, sorry -- Jarry1250 --></div>
+		$mainpagetext .= "</div><div style=\"width:33%; float:left; margin:15px 0;\"><div style=\"margin-left:3em; margin-right:1.5em;\" class=\"plainlinks\"><!-- No time to code the bot so it puts something useful here for you, sorry -- Jarry1250 --></div>
 <div style=\"width:33%; float:left; margin:15px 0px;\"><div style=\"margin-right:3em; margin-left:1.5em;\">\n";
 		$mainpagetext .= $rightcol;
 		$mainpagetext .= "</div></div>
@@ -167,7 +168,7 @@
 </noinclude>";
 		do_edit( "Wikipedia:Wikipedia_Signpost", $mainpagetext, "(on behalf of $editor) bot creating basic main page ready for manual editing" );
 		echo "<form action='publish.php' method='POST'>
-		<input type='hidden' name='step' id='step' value='$nextstep' />		
+		<input type='hidden' name='step' id='step' value='$nextstep' />
 		<input type='submit' value='Continue to step #$nextstep of 4' /></form>.";
 	}
 	if( $step == 2 ){
@@ -181,9 +182,9 @@
 		}
 		$pagetext = trim( $pagetext );
 		do_edit( "Wikipedia:Wikipedia_Signpost/$thisissue", $pagetext, "(on behalf of $editor) bot updating articles for inclusion, subtitles" );
-		
+
 		//Step 2-4: not run
-			
+
 		//Step 5: Issue page
 		$page = $wiki->initPage( 'Wikipedia:Wikipedia_Signpost/Issue' );
 		$text = $page->get_text();
@@ -199,17 +200,17 @@
 		$summary .= $dmy . ".";
 		if( !$ontime ) $summary .= ' Sorry for the delay!';
 		do_edit( 'Wikipedia:Wikipedia_Signpost/Issue', $pagetext, $summary, false, false );
-		
+
 		//Step 6: purges
 		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
-		
+
 		echo "<form action='publish.php' method='POST'>
-		<input type='hidden' name='step' id='step' value='$nextstep' />		
+		<input type='hidden' name='step' id='step' value='$nextstep' />
 		<input type='submit' value='Continue to step #$nextstep of 4' /></form>.";
 	}
 	if( $step == 3 ){
 		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
-				
+
 		//Step 7: mailing lists
 		$message = file_get_contents( "http://en.wikipedia.org/w/api.php?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|7}}" );
 		$message = json_decode( $message, true );
@@ -226,9 +227,9 @@
 		} else{
 			echo "<strong>Would have emailed:</strong><br />$message<br /><br />";
 		}
-		
+
 		echo "<form action='publish.php' method='POST'>
-		<input type='hidden' name='step' id='step' value='$nextstep' />		
+		<input type='hidden' name='step' id='step' value='$nextstep' />
 		<input type='submit' value='Continue to step #$nextstep of 4' /></form>.";
 	}
 	if( $step == 4 ){
@@ -289,7 +290,7 @@
 			$newtext .= implode( "\n", $lines );
 			do_edit( 'Wikipedia:Article_alerts/News', $newtext, "(on behalf of $editor) bot updating to add new edition of ''[[WP:SIGNPOST|The Signpost]]''" );
 		}
-		
+
 		//Step 13: book
 		$newtext = "{{saved book\n |title=Wikipedia Signpost\n |subtitle= $dmy\n |cover-image=WikipediaSignpostIcon.svg\n |cover-color=White\n}}\n\n";
 		$newtext .= "==The Wikipedia Signpost==\n=== $dmy ===\n";

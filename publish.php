@@ -320,7 +320,7 @@
 		do_edit( "Wikipedia:Wikipedia Signpost/Archives/$nextissue", "{{Signpost archive|$thisissue|$nextissue|$fortnightissue}}", "(on behalf of $editor) bot creating archives of new edition of ''[[WP:SIGNPOST|The Signpost]]''" );
 
 		//Step 16: tell Yuvi's app there's a new issue
-		post( 'tools-webproxy.pmtpa.wmflabs/wp-signpost/issue/update/latest', "" );
+		HTTP::post( 'tools-webproxy.pmtpa.wmflabs/wp-signpost/issue/update/latest' );
 		
 		//Step 17: permanent Single pages
 		$newtext = "{{Wikipedia:Wikipedia Signpost/Single|issuedate=$thisissue}}";
@@ -459,25 +459,3 @@
 		}
 		return isset( $_SESSION['password'] ) && ( strtolower( $_SESSION['password'] ) == strtolower( $emailpass ) );
 	}
-	
-	function post($url, $postdata = null, $authenticate = null) {
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		if( $postdata !== null ){
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-		}
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie.txt');
-		curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookie.txt');
-		curl_setopt($ch, CURLOPT_USERAGENT, 'Wikibot 0.24');
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded;charset=UTF-8'));
-		curl_setopt($ch, CURLOPT_HEADER, false);
-		$response = curl_exec($ch);
-		if (curl_errno($ch)) {
-			return curl_error($ch);
-		}
-		curl_close($ch);
-		return $response;
-      }

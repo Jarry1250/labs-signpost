@@ -52,6 +52,7 @@
 	$dmy = date( 'd F Y', $publicationdatestamp );
 	$editor = "[[User:The_ed17|]]";
 	ini_set( 'user_agent', 'Signpost delivery system' );
+	$http = HTTP::getDefaultInstance();
 
 	list( $emailpass, $identicapass, $blogpass )
 		= explode( ';', file_get_contents( '/data/project/signpost/credentials.txt' ) );
@@ -239,7 +240,7 @@
 		$message = "<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\"><div style=\"-moz-column-count:2; -webkit-column-count:2; column-count:2;\">\n{{Wikipedia:Wikipedia Signpost/{{subst:#time:Y-m-d|-{{subst:#time:N}} days +1 days}}}}\n</div><!--Volume $volumenumber, Issue $issuenumber-->\n";
 		$message .= "<div class=\"hlist\" style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">\n* '''[[Wikipedia:Wikipedia Signpost|Read this Signpost in full]]'''\n* [[Wikipedia:Signpost/Single|Single-page]]\n* [[Wikipedia:Wikipedia Signpost/Subscribe|Unsubscribe]]\n* ~~~~\n</div></div>";
 		$tokens = $wiki->get_tokens();
-		HTTP::post( $wiki->get_base_url(),
+		$http->post( $wiki->get_base_url(),
 			array(
 				'action' => 'massmessage',
 				'spamlist' => 'Wikipedia:Wikipedia Signpost/Tools/Spamlist',
@@ -262,12 +263,12 @@
 		$newtest .= '<div style="margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;">';
 		$newtext .= "''News, reports and features from the English Wikipedia's weekly journal about Wikipedia and Wikimedia''</div>\n";
 		$newtext .= '<div style="-moz-column-count:2; -webkit-column-count:2; column-count:2;">' . "\n";
-		$newbodytext = HTTP::get( $wiki->get_base_url() . "?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|8}}" );
+		$newbodytext = $http->get( $wiki->get_base_url() . "?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|8}}" );
 		$newbodytext = json_decode( $newbodytext, true );
 		$newbodytext = str_replace( array('<nowiki>', '</nowiki>'), '', $newbodytext['expandtemplates']['*'] );
 		$newbodytext = str_replace( '<br /><br />', "", $newbodytext );
 		$newtext .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>\n\n</source>";
-		HTTP::post( $meta->get_base_url(),
+		$http->post( $meta->get_base_url(),
 			array(
 				'action' => 'massmessage',
 				'spamlist' => 'Global message delivery/Targets/Signpost',
@@ -320,7 +321,7 @@
 		do_edit( "Wikipedia:Wikipedia Signpost/Archives/$nextissue", "{{Signpost archive|$thisissue|$nextissue|$fortnightissue}}", "(on behalf of $editor) bot creating archives of new edition of ''[[WP:SIGNPOST|The Signpost]]''" );
 
 		//Step 16: tell Yuvi's app there's a new issue
-		HTTP::post( 'tools-webproxy.pmtpa.wmflabs/wp-signpost/issue/update/latest' );
+		$http->post( 'tools-webproxy.pmtpa.wmflabs/wp-signpost/issue/update/latest' );
 		
 		//Step 17: permanent Single pages
 		$newtext = "{{Wikipedia:Wikipedia Signpost/Single|issuedate=$thisissue}}";
@@ -423,29 +424,30 @@
 			// require_once('/home/jarry/public_html/scripts/simplediff.php');
 			// echo trim( str_replace( "<del></del>", "", htmlDiff( $oldtext, $newtext )));
 			echo htmlspecialchars( $newtext ) . '</pre><br /><br />';
-		} else {
-			$exists = $page->get_exists();
-			if( !is_debug() ) echo "<!-- ";
-			$status = $page->edit( $newtext, $summary, false, $usebot );
-			if( !is_debug() ) echo " -->";
-			if( $status ){
-				echo "Edited $pagename ";
-				if( $exists ){				
-					$history = $page->history( 2 );
-					$rev = $history[1]['revid'];
-					echo "(<a href='http://en.wikipedia.org/w/index.php?diff=cur&oldid=$rev'>diff</a>)";
-				} else {
-					echo "(<a href='http://en.wikipedia.org/w/index.php?title=$pagename'>page created</a>)";
-				}
-				echo ". Remember to review this change!<br />";
-				
-			} else{
-				echo " <span style=\"color:red; font-weight:bold;\">Did not edit $pagename due to an error.";
-				if( !is_debug() ) echo " Enter debug mode or view source to see what the problem was.";
-				echo "<br />";
-			}
-			return $status;
+			return false;
 		}
+
+		$exists = $page->get_exists();
+		if( !is_debug() ) echo "<!-- ";
+		$status = $page->edit( $newtext, $summary, false, $usebot );
+		if( !is_debug() ) echo " -->";
+		if( $status ){
+			echo "Edited $pagename ";
+			if( $exists ){
+				$history = $page->history( 2 );
+				$rev = $history[1]['revid'];
+				echo "(<a href='http://en.wikipedia.org/w/index.php?diff=cur&oldid=$rev'>diff</a>)";
+			} else {
+				echo "(<a href='http://en.wikipedia.org/w/index.php?title=$pagename'>page created</a>)";
+			}
+			echo ". Remember to review this change!<br />";
+
+		} else{
+			echo " <span style=\"color:red; font-weight:bold;\">Did not edit $pagename due to an error.";
+			if( !is_debug() ) echo " Enter debug mode or view source to see what the problem was.";
+			echo "<br />";
+		}
+		return $status;
 	}
 	
 	function is_debug(){

@@ -218,17 +218,24 @@
 		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
 
 		//Step 8: local delivery
-		$message = "<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\"><div style=\"-moz-column-count:2; -webkit-column-count:2; column-count:2;\">\n{{Wikipedia:Wikipedia Signpost/{{subst:#time:Y-m-d|-{{subst:#time:N}} days +1 days}}}}\n</div><!--Volume $volumenumber, Issue $issuenumber-->\n";
+		$message = "<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\"><div style=\"-moz-column-count:2; -webkit-column-count:2; column-count:2;\">\n{{Wikipedia:Wikipedia Signpost/{{subst:Wikipedia:Wikipedia_Signpost/Issue|1}}}}\n</div><!--Volume $volumenumber, Issue $issuenumber-->\n";
 		$message .= "<div class=\"hlist\" style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">\n* '''[[Wikipedia:Wikipedia Signpost|Read this Signpost in full]]'''\n* [[Wikipedia:Signpost/Single|Single-page]]\n* [[Wikipedia:Wikipedia Signpost/Subscribe|Unsubscribe]]\n* ~~~~\n</div></div>";
 		$tokens = $wiki->get_tokens();
-		$http->post( $wiki->get_base_url(),
+		$result = $http->post( $wiki->get_base_url(),
 			array(
 				'action' => 'massmessage',
-				'spamlist' => 'Wikipedia:Wikipedia Signpost/Tools/Spamlist',
-				'subject' => "''The Signpost'': " . $dmy,
-				'token' => $tokens['edit']
+				'spamlist' => 'User:Jarry1250/spamlist',
+				'subject' => "''(test) The Signpost'': " . $dmy,
+				'message' => $message,
+				'token' => $tokens['edit'],
+				'format' => 'json'
 			)
 		);
+		$result = json_decode( $result, true );
+		echo "Publishing to the English Wikipedia... ";
+		echo ( isset( $result['massmessage']['result'] ) && $result['massmessage']['result'] == 'success' )
+			? 'Successful' : 'Failed';
+		echo '<br />';
 
 		//Step 9: identi.ca
 		//[deprecated]
@@ -240,23 +247,30 @@
 		$meta = Peachy::newWiki( 'livingbotmeta' );
 		$tokens = $meta->get_tokens();
 
-		$newtext = '<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\">';
-		$newtest .= '<div style="margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;">';
-		$newtext .= "''News, reports and features from the English Wikipedia's weekly journal about Wikipedia and Wikimedia''</div>\n";
-		$newtext .= '<div style="-moz-column-count:2; -webkit-column-count:2; column-count:2;">' . "\n";
+		$message = '<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\">';
+		$message .= '<div style="margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;">';
+		$message .= "''News, reports and features from the English Wikipedia's weekly journal about Wikipedia and Wikimedia''</div>\n";
+		$message .= '<div style="-moz-column-count:2; -webkit-column-count:2; column-count:2;">' . "\n";
 		$newbodytext = $http->get( $wiki->get_base_url() . "?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|8}}" );
 		$newbodytext = json_decode( $newbodytext, true );
 		$newbodytext = str_replace( array('<nowiki>', '</nowiki>'), '', $newbodytext['expandtemplates']['*'] );
 		$newbodytext = str_replace( '<br /><br />', "", $newbodytext );
-		$newtext .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>\n\n</source>";
-		$http->post( $meta->get_base_url(),
+		$message .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>\n\n</source>";
+		$result = $http->post( $meta->get_base_url(),
 			array(
 				'action' => 'massmessage',
 				'spamlist' => 'Global message delivery/Targets/Signpost',
 				'subject' => "''The Signpost'': " . $dmy,
-				'token' => $tokens['edit']
+				'message' => $message,
+				'token' => $tokens['edit'],
+				'format' => 'json'
 			)
 		);
+		$result = json_decode( $result, true );
+		echo "Publishing to the global wikis... ";
+		echo ( isset( $result['massmessage']['result'] ) && $result['massmessage']['result'] == 'success' )
+			? 'Successful' : 'Failed';
+		echo '<br />';
 
 		//Step 12: article alerts
 		$page = $wiki->initPage( 'Wikipedia:Article_alerts/News' );

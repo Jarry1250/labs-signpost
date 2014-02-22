@@ -147,25 +147,6 @@
 <div style=\"clear:both; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif; text-align:center; font-size:100%; line-height:120%; margin-bottom:-42px; margin-top:30px;\">'''[[Wikipedia:Wikipedia Signpost/Single|Single-page edition]]{{#ifexist: Book:Wikipedia Signpost/{{Wikipedia:Wikipedia Signpost/Issue|1}} |  {{·}} [[Book:Wikipedia Signpost/{{Wikipedia:Wikipedia Signpost/Issue|1}}|Book edition]] |  }}'''</div>
 {{Wikipedia:Signpost/Template:Signpost-footer|{{Wikipedia:Wikipedia Signpost/Issue|3}}|{{Wikipedia:Wikipedia Signpost/Issue|4}}}}<noinclude>
 [[Category:Wikipedia Signpost]]
-
-[[de:Wikipedia:Kurier]]
-[[bg:Уикипедия:Текущи съобщения]]
-[[el:Βικιπαίδεια:Ανταπόκριση]]
-[[eo:Vikipedio:Vikipedia gazeto]]
-[[es:Wikipedia:Cartelera de acontecimientos]]
-[[eu:Wikipedia:WikiMediari buruz gaurkotasun-albisteak]]
-[[fa:ویکی‌پدیا:وقایع_اتفاقیه]]
-[[he:ויקיפדיה:הטילדה הרביעית]]
-[[it:Wikipedia:Wikipediano]]
-[[pt:Wikipedia:Jornal da Wikipédia]]
-[[ru:Википедия:Викивестник]]
-[[sv:Wikipedia:Anslagstavlan]]
-[[te:వికీపీడియా:తెవికీ వార్త]]
-[[th:วิกิพีเดีย:สารวิกิพีเดีย]]
-[[vi:Wikipedia:Thời sự Wikipedia]]
-[[tr:Vikipedi:Haber]]
-[[zh:Wikipedia:维基简讯]]
-[[zh-min-nan:Wikipedia:Siau-sit]]
 </noinclude>";
 		do_edit( "Wikipedia:Wikipedia_Signpost", $mainpagetext, "(on behalf of $editor) bot creating basic main page ready for manual editing" );
 		echo "<form action='publish.php' method='POST'>

@@ -199,7 +199,7 @@
 		$message = $message['expandtemplates']['*'];
 		$message = str_replace( "<br />", "\n", str_replace( "\n", '', $message ) );
 		$message .= "\nSingle page view\nhttp://en.wikipedia.org/wiki/Wikipedia:Signpost/Single\n\nPDF version\nhttp://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
-		$message .= "\n\n\nhttp://identi.ca/wikisignpost / https://twitter.com/wikisignpost\n--\nWikipedia Signpost Staff\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost";
+		$message .= "\n\n\nhttps://www.facebook.com/wikisignpost / https://twitter.com/wikisignpost\n--\nWikipedia Signpost Staff\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost";
 		$subject = "The Signpost -- Volume $volumenumber, Issue $issuenumber -- " . $dmy;
 		$to = "wikimediaannounce-l <WikimediaAnnounce-l@lists.wikimedia.org>";
 		$headers = 'From: Wikipedia Signpost <wikipediasignpost@gmail.com>' . "\r\n";

@@ -224,7 +224,7 @@
 		$result = $http->post( $wiki->get_base_url(),
 			array(
 				'action' => 'massmessage',
-				'spamlist' => 'User:Jarry1250/spamlist',
+				'spamlist' => 'Wikipedia:Wikipedia_Signpost/Tools/Spamlist',
 				'subject' => "''(test) The Signpost'': " . $dmy,
 				'message' => $message,
 				'token' => $tokens['edit'],
@@ -234,7 +234,7 @@
 		$result = json_decode( $result, true );
 		echo "Publishing to the English Wikipedia... ";
 		echo ( isset( $result['massmessage']['result'] ) && $result['massmessage']['result'] == 'success' )
-			? 'Successful' : 'Failed';
+			? 'Successful' : 'Failed.';
 		echo '<br />';
 
 		//Step 9: identi.ca
@@ -255,7 +255,7 @@
 		$newbodytext = json_decode( $newbodytext, true );
 		$newbodytext = str_replace( array('<nowiki>', '</nowiki>'), '', $newbodytext['expandtemplates']['*'] );
 		$newbodytext = str_replace( '<br /><br />', "", $newbodytext );
-		$message .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>\n\n</source>";
+		$message .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>";
 		$result = $http->post( $meta->get_base_url(),
 			array(
 				'action' => 'massmessage',

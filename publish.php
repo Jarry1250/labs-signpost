@@ -225,7 +225,7 @@
 			array(
 				'action' => 'massmessage',
 				'spamlist' => 'Wikipedia:Wikipedia_Signpost/Tools/Spamlist',
-				'subject' => "''(test) The Signpost'': " . $dmy,
+				'subject' => "''The Signpost'': " . $dmy,
 				'message' => $message,
 				'token' => $tokens['edit'],
 				'format' => 'json'

@@ -137,15 +137,13 @@
 <div><!-- Main area -->
 <div style=\"width:33%; float:left; margin:15px 0;\"><div style=\"margin-left:3em; margin-right:1.5em;\" class=\"plainlinks\">\n";
 		$mainpagetext .= $leftcol;
-		$mainpagetext .= "</div><div style=\"width:33%; float:left; margin:15px 0;\"><div style=\"margin-left:3em; margin-right:1.5em;\" class=\"plainlinks\"><!-- No time to code the bot so it puts something useful here for you, sorry -- Jarry1250 --></div>
+		$mainpagetext .= "</div></div>\n<div style=\"width:33%; float:left; margin:15px 0;\"><div style=\"margin-left:3em; margin-right:1.5em;\" class=\"plainlinks\"><!-- No time to code the bot so it puts something useful here for you, sorry -- Jarry1250 --></div></div>
 <div style=\"width:33%; float:left; margin:15px 0;\"><div style=\"margin-right:3em; margin-left:1.5em;\">\n";
 		$mainpagetext .= $rightcol;
 		$mainpagetext .= "</div></div>
-
-</div>
 </div>
 <div style=\"clear:both; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif; text-align:center; font-size:100%; line-height:120%; margin-bottom:-42px; margin-top:30px;\">'''[[Wikipedia:Wikipedia Signpost/Single|Single-page edition]]{{#ifexist: Book:Wikipedia Signpost/{{Wikipedia:Wikipedia Signpost/Issue|1}} |  {{·}} [[Book:Wikipedia Signpost/{{Wikipedia:Wikipedia Signpost/Issue|1}}|Book edition]] |  }}'''</div>
-{{Wikipedia:Signpost/Template:Signpost-footer|{{Wikipedia:Wikipedia Signpost/Issue|3}}|{{Wikipedia:Wikipedia Signpost/Issue|4}}}}<noinclude>
+{{Wikipedia:Signpost/Template:Signpost-footer|{{Wikipedia:Wikipedia Signpost/Issue|3}}|}}<noinclude>
 [[Category:Wikipedia Signpost]]
 </noinclude>";
 		do_edit( "Wikipedia:Wikipedia_Signpost", $mainpagetext, "(on behalf of $editor) bot creating basic main page ready for manual editing" );

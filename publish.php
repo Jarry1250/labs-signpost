@@ -44,6 +44,7 @@
 	$fortnightissue = date( 'Y-m-d', $publicationdatestamp + 2 * $week );
 	$volumenumber = intval( date( 'Y', $publicationdatestamp ) ) - 2004;
 	$issuenumber = date( 'W', $publicationdatestamp );
+	if( intval( date( 'Y' ) ) == 2014 ) $issuenumber--;
 	$yearstartsona  = date( 'l', strtotime( date( '1 \J\a\n Y' ) ) );
 	if( $yearstartsona == 'Thursday' ) {
 		$issuenumber--;

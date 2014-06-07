@@ -143,7 +143,7 @@
 		$mainpagetext .= $rightcol;
 		$mainpagetext .= "</div></div>
 </div>
-<div style=\"clear:both; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif; text-align:center; font-size:100%; line-height:120%; margin-bottom:-42px; margin-top:30px;\">'''[[Wikipedia:Wikipedia Signpost/Single|Single-page edition]]{{#ifexist: Book:Wikipedia Signpost/{{Wikipedia:Wikipedia Signpost/Issue|1}} |  {{·}} [[Book:Wikipedia Signpost/{{Wikipedia:Wikipedia Signpost/Issue|1}}|Book edition]] |  }}'''</div>
+<div style=\"clear:both; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif; text-align:center; font-size:100%; line-height:120%; margin-bottom:-42px; margin-top:30px;\">'''[[Wikipedia:Wikipedia Signpost/Single/{{Wikipedia:Wikipedia Signpost/Issue|1}}|Single-page edition]]{{#ifexist: Book:Wikipedia Signpost/{{Wikipedia:Wikipedia Signpost/Issue|1}} |  {{·}} [[Book:Wikipedia Signpost/{{Wikipedia:Wikipedia Signpost/Issue|1}}|Book edition]] |  }}'''</div>
 {{Wikipedia:Signpost/Template:Signpost-footer|{{Wikipedia:Wikipedia Signpost/Issue|3}}|}}<noinclude>
 [[Category:Wikipedia Signpost]]
 </noinclude>";
@@ -197,7 +197,7 @@
 		$message = json_decode( $message, true );
 		$message = $message['expandtemplates']['*'];
 		$message = str_replace( "<br />", "\n", str_replace( "\n", '', $message ) );
-		$message .= "\nSingle page view\nhttp://en.wikipedia.org/wiki/Wikipedia:Signpost/Single\n\nPDF version\nhttp://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
+		$message .= "\nSingle page view\nhttp://en.wikipedia.org/wiki/Wikipedia:Signpost/Single/$thisissue\n\nPDF version\nhttp://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
 		$message .= "\n\n\nhttps://www.facebook.com/wikisignpost / https://twitter.com/wikisignpost\n--\nWikipedia Signpost Staff\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost";
 		$subject = "The Signpost -- Volume $volumenumber, Issue $issuenumber -- " . $dmy;
 		$to = "wikimediaannounce-l <WikimediaAnnounce-l@lists.wikimedia.org>";
@@ -218,7 +218,7 @@
 
 		//Step 8: local delivery
 		$message = "<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\"><div style=\"-moz-column-count:2; -webkit-column-count:2; column-count:2;\">\n{{Wikipedia:Wikipedia Signpost/{{subst:Wikipedia:Wikipedia_Signpost/Issue|1}}}}\n</div><!--Volume $volumenumber, Issue $issuenumber-->\n";
-		$message .= "<div class=\"hlist\" style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">\n* '''[[Wikipedia:Wikipedia Signpost|Read this Signpost in full]]'''\n* [[Wikipedia:Signpost/Single|Single-page]]\n* [[Wikipedia:Wikipedia Signpost/Subscribe|Unsubscribe]]\n* ~~~~\n</div></div>";
+		$message .= "<div class=\"hlist\" style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">\n* '''[[Wikipedia:Wikipedia Signpost|Read this Signpost in full]]'''\n* [[Wikipedia:Signpost/Single/$thisissue|Single-page]]\n* [[Wikipedia:Wikipedia Signpost/Subscribe|Unsubscribe]]\n* ~~~~\n</div></div>";
 		$tokens = $wiki->get_tokens();
 		$result = $http->post( $wiki->get_base_url(),
 			array(
@@ -254,7 +254,7 @@
 		$newbodytext = json_decode( $newbodytext, true );
 		$newbodytext = str_replace( array('<nowiki>', '</nowiki>'), '', $newbodytext['expandtemplates']['*'] );
 		$newbodytext = str_replace( '<br /><br />', "", $newbodytext );
-		$message .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>";
+		$message .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single/$thisissue|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>";
 		$result = $http->post( $meta->get_base_url(),
 			array(
 				'action' => 'massmessage',

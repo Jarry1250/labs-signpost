@@ -181,21 +181,21 @@
 		do_edit( 'Wikipedia:Wikipedia_Signpost/Issue', $pagetext, $summary, false, false );
 
 		//Step 6: purges
-		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
+		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Wikipedia Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
 
 		echo "<form action='publish.php' method='POST'>
 		<input type='hidden' name='step' id='step' value='$nextstep' />
 		<input type='submit' value='Continue to step #$nextstep of 4' /></form>.";
 	}
 	if( $step == 3 ){
-		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
+		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Wikipedia Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
 
 		//Step 7: mailing lists
 		$message = file_get_contents( "http://en.wikipedia.org/w/api.php?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|7}}" );
 		$message = json_decode( $message, true );
 		$message = $message['expandtemplates']['*'];
 		$message = str_replace( "<br />", "\n", str_replace( "\n", '', $message ) );
-		$message .= "\nSingle page view\nhttp://en.wikipedia.org/wiki/Wikipedia:Signpost/Single/$thisissue\n\nPDF version\nhttp://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
+		$message .= "\nSingle page view\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia Signpost/Single/$thisissue\n\nPDF version\nhttp://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
 		$message .= "\n\n\nhttps://www.facebook.com/wikisignpost / https://twitter.com/wikisignpost\n--\nWikipedia Signpost Staff\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost";
 		$subject = "The Signpost -- Volume $volumenumber, Issue $issuenumber -- " . $dmy;
 		$to = "wikimediaannounce-l <WikimediaAnnounce-l@lists.wikimedia.org>";
@@ -212,11 +212,11 @@
 		<input type='submit' value='Continue to step #$nextstep of 4' /></form>.";
 	}
 	if( $step == 4 ){
-		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
+		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Wikipedia Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
 
 		//Step 8: local delivery
 		$message = "<div lang=\"en\" dir=\"ltr\" class=\"mw-content-ltr\"><div style=\"-moz-column-count:2; -webkit-column-count:2; column-count:2;\">\n{{Wikipedia:Wikipedia Signpost/{{subst:Wikipedia:Wikipedia_Signpost/Issue|1}}}}\n</div><!--Volume $volumenumber, Issue $issuenumber-->\n";
-		$message .= "<div class=\"hlist\" style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">\n* '''[[Wikipedia:Wikipedia Signpost|Read this Signpost in full]]'''\n* [[Wikipedia:Signpost/Single/$thisissue|Single-page]]\n* [[Wikipedia:Wikipedia Signpost/Subscribe|Unsubscribe]]\n* ~~~~\n</div></div>";
+		$message .= "<div class=\"hlist\" style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">\n* '''[[Wikipedia:Wikipedia Signpost|Read this Signpost in full]]'''\n* [[Wikipedia:Wikipedia Signpost/Single/$thisissue|Single-page]]\n* [[Wikipedia:Wikipedia Signpost/Subscribe|Unsubscribe]]\n* ~~~~\n</div></div>";
 		$tokens = $wiki->get_tokens();
 		$result = $http->post( $wiki->get_base_url(),
 			array(
@@ -252,7 +252,7 @@
 		$newbodytext = json_decode( $newbodytext, true );
 		$newbodytext = str_replace( array('<nowiki>', '</nowiki>'), '', $newbodytext['expandtemplates']['*'] );
 		$newbodytext = str_replace( '<br /><br />', "", $newbodytext );
-		$message .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Signpost/Single/$thisissue|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div>";
+		$message .= $newbodytext . "</div>\n<div style=\"margin-top:10px; font-size:90%; padding-left:5px; font-family:Georgia, Palatino, Palatino Linotype, Times, Times New Roman, serif;\">'''[[w:en:Wikipedia:Wikipedia Signpost|Read this Signpost in full]]''' &middot; [[w:en:Wikipedia:Wikipedia Signpost/Single/$thisissue|Single-page]] &middot; [[m:Global message delivery/Targets/Signpost|Unsubscribe]] &middot; [[m:Global message delivery|Global message delivery]] ~~~~~\n</div></div>";
 		$result = $http->post( $meta->get_base_url(),
 			array(
 				'action' => 'massmessage',

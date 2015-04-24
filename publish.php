@@ -195,7 +195,7 @@
 		$message = json_decode( $message, true );
 		$message = $message['expandtemplates']['*'];
 		$message = str_replace( "<br />", "\n", str_replace( "\n", '', $message ) );
-		$message .= "\nSingle page view\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia Signpost/Single/$thisissue\n\nPDF version\nhttp://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
+		$message .= "\nSingle page view\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost/Single/$thisissue\n\nPDF version\nhttp://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
 		$message .= "\n\n\nhttps://www.facebook.com/wikisignpost / https://twitter.com/wikisignpost\n--\nWikipedia Signpost Staff\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost";
 		$subject = "The Signpost -- Volume $volumenumber, Issue $issuenumber -- " . $dmy;
 		$to = "wikimediaannounce-l <WikimediaAnnounce-l@lists.wikimedia.org>";

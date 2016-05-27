@@ -191,12 +191,12 @@
 		$wiki->purge( array( 'Wikipedia:Wikipedia Signpost/Issue', 'Wikipedia:Wikipedia Signpost', 'Wikipedia:Wikipedia Signpost/Single', 'Wikipedia:Wikipedia_Signpost/Newsroom/Publishing', 'Wikipedia:Wikipedia_Signpost/Archives/2011-07-25' ) );
 
 		//Step 7: mailing lists
-		$message = file_get_contents( "http://en.wikipedia.org/w/api.php?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|7}}" );
+		$message = file_get_contents( "https://en.wikipedia.org/w/api.php?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|7}}" );
 		$message = json_decode( $message, true );
 		$message = $message['expandtemplates']['*'];
 		$message = str_replace( "<br />", "\n", str_replace( "\n", '', $message ) );
-		$message .= "\nSingle page view\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost/Single/$thisissue\n\nPDF version\nhttp://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
-		$message .= "\n\n\nhttps://www.facebook.com/wikisignpost / https://twitter.com/wikisignpost\n--\nWikipedia Signpost Staff\nhttp://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost";
+		$message .= "\nSingle page view\nhttps://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost/Single/$thisissue\n\nPDF version\nhttps://en.wikipedia.org/wiki/Book:Wikipedia_Signpost/$thisissue";
+		$message .= "\n\n\nhttps://www.facebook.com/wikisignpost / https://twitter.com/wikisignpost\n--\nWikipedia Signpost Staff\nhttps://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost";
 		$subject = "The Signpost -- Volume $volumenumber, Issue $issuenumber -- " . $dmy;
 		$to = "wikimediaannounce-l <WikimediaAnnounce-l@lists.wikimedia.org>";
 		$headers = 'From: Wikipedia Signpost <wikipediasignpost@gmail.com>' . "\r\n";
@@ -286,7 +286,7 @@
 		//Step 13: book
 		$newtext = "{{saved book\n |title=Wikipedia Signpost\n |subtitle= $dmy\n |cover-image=WikipediaSignpostIcon.svg\n |cover-color=White\n}}\n\n";
 		$newtext .= "==The Wikipedia Signpost==\n=== $dmy ===\n";
-		$body = file_get_contents( "http://en.wikipedia.org/w/api.php?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|5}}" );
+		$body = file_get_contents( "https://en.wikipedia.org/w/api.php?action=expandtemplates&format=json&text={{Wikipedia:Wikipedia%20Signpost/{{Wikipedia:Wikipedia%20Signpost/Issue|1}}|5}}" );
 		$body = json_decode( $body, true );
 		$body = $body['expandtemplates']['*'];
 		$newtext .= $body;
@@ -428,9 +428,9 @@
 			if( $exists ){
 				$history = $page->history( 2 );
 				$rev = $history[1]['revid'];
-				echo "(<a href='http://en.wikipedia.org/w/index.php?diff=cur&oldid=$rev'>diff</a>)";
+				echo "(<a href='https://en.wikipedia.org/w/index.php?diff=cur&oldid=$rev'>diff</a>)";
 			} else {
-				echo "(<a href='http://en.wikipedia.org/w/index.php?title=$pagename'>page created</a>)";
+				echo "(<a href='https://en.wikipedia.org/w/index.php?title=$pagename'>page created</a>)";
 			}
 			echo ". Remember to review this change!<br />";
 
